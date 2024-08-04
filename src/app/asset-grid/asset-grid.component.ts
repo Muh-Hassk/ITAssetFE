@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ColDef, ICellRendererParams, CellValueChangedEvent } from 'ag-grid-community';
 import { DataServiceService } from '../Services/data-service.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-asset-grid',
@@ -9,7 +10,10 @@ import { DataServiceService } from '../Services/data-service.service';
   styleUrls: ['./asset-grid.component.css']
 })
 export class AssetGridComponent implements OnInit {
+  @ViewChild('confirmDeleteDialog') confirmDeleteDialog!: TemplateRef<any>;
+
   assets: any;
+  selectedAsset: any;
 
   datePipe = new DatePipe('en-US');
 
@@ -37,7 +41,6 @@ export class AssetGridComponent implements OnInit {
       width: 180,
       editable: true,
       cellEditor: 'agDateCellEditor',
-      
       valueFormatter: (params: { value: Date }) => this.datePipe.transform(params.value, 'yyyy-MM-dd') || 'N/A'
     },
     {
@@ -48,9 +51,8 @@ export class AssetGridComponent implements OnInit {
         button.innerText = 'Delete';
         button.className = 'ag-grid-delete-button'; // Apply the CSS class
         button.addEventListener('click', () => {
-          if (confirm(`Are you sure you want to delete asset with ID ${params.data.id}?`)) {
-            this.onDelete(params.data);
-          }
+          this.selectedAsset = params.data;
+          this.openConfirmDeleteDialog(this.selectedAsset);
         });
         return button;
       }
@@ -63,7 +65,7 @@ export class AssetGridComponent implements OnInit {
     filter: true
   };
 
-  constructor(private dataService: DataServiceService) {}
+  constructor(private dataService: DataServiceService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.fetchAllAssets();
@@ -75,13 +77,36 @@ export class AssetGridComponent implements OnInit {
     });
   }
 
-  onDelete(asset: any): void {
-    this.dataService.deleteAsset(asset.id).subscribe(response => {
-      console.log('Asset deleted successfully');
-      
-    }, error => {
-      console.error('Failed to delete asset', error);
+  openConfirmDeleteDialog(assetId:any): void {
+    const dialogRef = this.dialog.open(this.confirmDeleteDialog);
+    console.log(assetId);
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+        if (result === 'yes') {
+          this.onDelete(assetId);
+        } else {
+          console.log('Thank you');
+        }
+      } else {
+        console.log('Dialog closed without action');
+      }
     });
+  }
+  
+
+  onDelete(asset: any): void {
+    console.log("Here");
+    
+    this.dataService.deleteAsset(asset.id).subscribe(
+      response => {
+        console.log('Asset deleted successfully');
+        this.fetchAllAssets(); // Refresh the data after deletion
+      },
+      error => {
+        console.error('Failed to delete asset', error);
+      }
+    );
   }
 
   onCellValueChanged(event: CellValueChangedEvent): void {
@@ -91,8 +116,6 @@ export class AssetGridComponent implements OnInit {
     if (updatedAsset.warrantyExpirationDate) {
       updatedAsset.warrantyExpirationDate = this.datePipe.transform(updatedAsset.warrantyExpirationDate, 'yyyy-MM-dd') || '';
     }
-
-  
 
     this.dataService.updateAsset(updatedAsset)
   }
