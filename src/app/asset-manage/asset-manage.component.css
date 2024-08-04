@@ -1,0 +1,32 @@
+.header-container {
+    padding: 16px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  
+  .header-container h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .header-container p {
+    margin: 8px 0;
+    color: #666;
+  }
+  
+  .header-container button {
+    margin-top: 8px;
+  }
+
+  .asset-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .mat-form-field {
+    margin-bottom: 16px; 
+  }
+  

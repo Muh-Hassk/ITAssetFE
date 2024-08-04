@@ -1,1 +1,57 @@
-<app-asset-grid></app-asset-grid>
+<div class="header-container">
+    <h1>Asset Management</h1>
+    <p>Welcome to the Asset Management page. Here you can view, edit, and delete assets. Use the button below to add a new asset.</p>
+    <button mat-raised-button color="primary" (click)="openCreateAssetDialog()">Create New Asset</button>
+  </div>
+  
+  <ng-template #dialogContent>
+    <h1 mat-dialog-title>Create New Asset</h1>
+    <div mat-dialog-content>
+      <form [formGroup]="newAssetForm" (ngSubmit)="onSubmit()" class="asset-form">
+        <mat-form-field appearance="fill">
+          <mat-label>Brand</mat-label>
+          <input matInput formControlName="brand">
+          <mat-error *ngIf="newAssetForm.get('brand')?.hasError('required')">
+            Brand is required
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Serial Number</mat-label>
+          <input matInput formControlName="serialNumber">
+          <mat-error *ngIf="newAssetForm.get('serialNumber')?.hasError('required')">
+            Serial Number is required
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option *ngFor="let status of statusOptions" [value]="status">
+              {{status}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="newAssetForm.get('status')?.hasError('required')">
+            Status is required
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Warranty Expiration Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="warrantyExpirationDate">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="newAssetForm.get('warrantyExpirationDate')?.hasError('required')">
+            Warranty Expiration Date is required
+          </mat-error>
+        </mat-form-field>
+      </form>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-raised-button color="primary" type="submit" (click)="onSubmit()">Add</button>
+    </div>
+  </ng-template>
+  
+  <app-asset-grid></app-asset-grid>
+  
