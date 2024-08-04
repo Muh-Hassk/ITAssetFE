@@ -15,8 +15,8 @@ export class AssetGridComponent implements OnInit {
 
   columnDefs: ColDef[] = [
     { headerName: 'ID', field: 'id', sortable: true, filter: true, width: 100 },
-    { headerName: 'Brand', field: 'brand', sortable: true, filter: true, width: 150 },
-    { headerName: 'Serial Number', field: 'serialNumber', sortable: true, filter: true, width: 200 },
+    { headerName: 'Brand', field: 'brand', sortable: true, filter: true, width: 150, editable: true },
+    { headerName: 'Serial Number', field: 'serialNumber', sortable: true, filter: true, width: 200, editable: true },
     { 
       headerName: 'Status', 
       field: 'status', 
@@ -24,9 +24,9 @@ export class AssetGridComponent implements OnInit {
       filter: true, 
       width: 100,
       editable: true,
-      cellEditor: 'agSelectCellEditor', // Use AG-Grid's built-in select cell editor
+      cellEditor: 'agSelectCellEditor',
       cellEditorParams: {
-        values: ['New', 'In Use', 'Damaged', 'Dispose'] // Predefined values for the select dropdown
+        values: ['New', 'In Use', 'Damaged', 'Dispose']
       }
     },
     { 
@@ -35,8 +35,10 @@ export class AssetGridComponent implements OnInit {
       sortable: true, 
       filter: true, 
       width: 180,
-      valueFormatter: (params: { value: Date }) => this.datePipe.transform(params.value, 'yyyy/MM/dd') || 'N/A',
-      editable: true
+      editable: true,
+      cellEditor: 'agDateCellEditor',
+      
+      valueFormatter: (params: { value: Date }) => this.datePipe.transform(params.value, 'yyyy-MM-dd') || 'N/A'
     },
     {
       headerName: 'Actions',
@@ -44,7 +46,7 @@ export class AssetGridComponent implements OnInit {
       cellRenderer: (params: ICellRendererParams) => {
         const button = document.createElement('button');
         button.innerText = 'Delete';
-        button.className = 'ag-grid-delete-button'; 
+        button.className = 'ag-grid-delete-button'; // Apply the CSS class
         button.addEventListener('click', () => {
           if (confirm(`Are you sure you want to delete asset with ID ${params.data.id}?`)) {
             this.onDelete(params.data);
@@ -76,6 +78,7 @@ export class AssetGridComponent implements OnInit {
   onDelete(asset: any): void {
     this.dataService.deleteAsset(asset.id).subscribe(response => {
       console.log('Asset deleted successfully');
+      
     }, error => {
       console.error('Failed to delete asset', error);
     });
@@ -83,6 +86,14 @@ export class AssetGridComponent implements OnInit {
 
   onCellValueChanged(event: CellValueChangedEvent): void {
     const updatedAsset = event.data;
+
+    // Convert date fields to yyyy-MM-dd format
+    if (updatedAsset.warrantyExpirationDate) {
+      updatedAsset.warrantyExpirationDate = this.datePipe.transform(updatedAsset.warrantyExpirationDate, 'yyyy-MM-dd') || '';
+    }
+
+  
+
     this.dataService.updateAsset(updatedAsset)
   }
 }
