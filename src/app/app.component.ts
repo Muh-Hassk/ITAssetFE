@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ITAssetFE';
+  isSidebarOpen = true;
+
+  handleToggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
 }

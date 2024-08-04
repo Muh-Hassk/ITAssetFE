@@ -1,0 +1,14 @@
+<nav class="navbar">
+    <div class="navbar-container">
+      <a href="#" class="navbar-logo">IT Asset Control</a>
+      <div class="menu-icon" (click)="toggleMenu()">
+        <i [ngClass]="isMenuOpen ? 'fa fa-times' : 'fa fa-bars'"></i>
+      </div>
+      <ul class="nav-menu" [ngClass]="{'active': isMenuOpen}">
+        <li class="nav-item"><a routerLink='data' [ngClass]="getLinkClass('/data')">View Data</a></li>
+        <li class="nav-item"><a routerLink='' [ngClass]="getLinkClass('/dashboard')">Dashboard</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+

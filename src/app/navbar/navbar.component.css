@@ -1,0 +1,125 @@
+/* Navbar container */
+.navbar {
+    background-color: #15406c;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    color: #3b8d42;
+  }
+  
+  /* Navbar container flex styling */
+  .navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  /* Navbar logo styling */
+  .navbar-logo {
+    font-size: 1.5rem;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease; /* Smooth transition for color change */
+  }
+  
+  .navbar-logo:hover {
+    color: #3b8d42; /* Lighter color on hover */
+  }
+  
+  /* Menu icon (hamburger) */
+  .menu-icon {
+    display: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #fff;
+    transition: color 0.3s ease; /* Smooth transition for color change */
+  }
+  
+  .menu-icon:hover {
+    color: #3b8d42; /* Slightly lighter color on hover */
+  }
+  
+  /* Navigation menu styling */
+  .nav-menu {
+    display: flex;
+    list-style: none;
+  }
+  
+  .nav-item {
+    margin-left: 20px;
+    position: relative;
+  }
+  
+  /* Navigation link styling */
+  .nav-link {
+    color: #3b8d42;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 10px;
+    transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transitions for color and background */
+    border-radius: 4px;
+  }
+  
+  .nav-link:hover {
+    color: #fff; /* Dark color on hover */
+    background-color: #3b8d42; /* Light background on hover */
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .menu-icon {
+      display: block;
+    }
+  
+    .nav-menu {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background-color: #15406c;
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.5s ease;
+      padding: 10px 0;
+    }
+  
+    .nav-menu.active {
+      display: flex;
+    }
+  
+    .nav-item {
+      margin: 15px 0;
+    }
+  
+    .nav-link {
+      padding: 10px 20px;
+      border-radius: 4px;
+    }
+  }
+  /* Navigation link styling */
+.nav-link {
+    color: #FFf;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 10px;
+    transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transitions for color and background */
+    border-radius: 4px;
+  }
+  
+  .nav-link:hover {
+    color: #fff; /* Dark color on hover */
+    background-color: #3b8d42; /* Light background on hover */
+  }
+  
+  /* Active link styling */
+  .nav-link.active {
+    color: #fff; /* Color for the active link */
+    background-color: #3b8d42; /* Background color for the active link */
+    font-weight: bold; /* Optional: Make the active link bold */
+  }
+  
