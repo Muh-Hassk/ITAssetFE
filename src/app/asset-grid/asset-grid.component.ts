@@ -3,6 +3,8 @@ import { DatePipe } from '@angular/common';
 import { ColDef, ICellRendererParams, CellValueChangedEvent } from 'ag-grid-community';
 import { DataServiceService } from '../Services/data-service.service';
 import { MatDialog } from '@angular/material/dialog';
+import { timeout, timestamp } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-asset-grid',
@@ -65,7 +67,7 @@ export class AssetGridComponent implements OnInit {
     filter: true
   };
 
-  constructor(private dataService: DataServiceService, public dialog: MatDialog) {}
+  constructor(private dataService: DataServiceService, public dialog: MatDialog, private toaster: ToastrService) {}
 
   ngOnInit(): void {
     this.fetchAllAssets();
@@ -77,9 +79,8 @@ export class AssetGridComponent implements OnInit {
     });
   }
 
-  openConfirmDeleteDialog(assetId:any): void {
+  openConfirmDeleteDialog(assetId: any): void {
     const dialogRef = this.dialog.open(this.confirmDeleteDialog);
-    console.log(assetId);
     
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
@@ -94,6 +95,7 @@ export class AssetGridComponent implements OnInit {
     });
   }
   
+  
 
   onDelete(asset: any): void {
     console.log("Here");
@@ -101,7 +103,9 @@ export class AssetGridComponent implements OnInit {
     this.dataService.deleteAsset(asset.id).subscribe(
       response => {
         console.log('Asset deleted successfully');
-        this.fetchAllAssets(); // Refresh the data after deletion
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000); // Delay of 3 seconds
       },
       error => {
         console.error('Failed to delete asset', error);

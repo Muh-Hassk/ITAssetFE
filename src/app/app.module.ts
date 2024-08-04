@@ -20,6 +20,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core'; // For native date adapter
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     MatDatepickerModule,
     ReactiveFormsModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    ToastrModule.forRoot(),
 
   ],
   providers: [],
