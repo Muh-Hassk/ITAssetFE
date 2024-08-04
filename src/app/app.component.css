@@ -1,4 +1,3 @@
-/* Apply styles to the body to use flexbox layout */
 html, body {
     height: 100%;
     margin: 0;
@@ -9,12 +8,10 @@ html, body {
     flex-direction: column;
   }
   
-  /* Main content area should take up remaining space */
   main {
     flex: 1;
   }
   
-  /* Footer styling remains the same */
   .footer {
     display: flex;
     flex-direction: column;
@@ -27,7 +24,5 @@ html, body {
     font-family: Menlo, monospace;
     line-height: 1.3;
     text-align: center;
-    /* Remove position: fixed */
-    /* Remove bottom: 0 */
   }
   

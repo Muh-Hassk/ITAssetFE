@@ -20,7 +20,7 @@ export class DataServiceService {
   }
   
 
-  updateAsset(body: any): void {
+  updateAsset(body: any) {
     this.http.put(this.editAssetUrl, body).subscribe({
       next: (res) => {
         console.log("Asset Updated Successfully");
@@ -50,6 +50,7 @@ export class DataServiceService {
     return this.http.delete<void>(url).pipe(
       tap(() => {
         console.log('Asset deleted successfully');
+        window.location.reload();
       }),
       catchError(err => {
         console.error('Failed to delete asset:', err);

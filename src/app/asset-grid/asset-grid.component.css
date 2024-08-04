@@ -1,0 +1,50 @@
+
+.ag-theme-alpine {
+    height: 100%;
+    width: 100%;
+    border: 1px solid #ddd;
+  }
+  
+  .ag-header-cell-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #15406c;
+  }
+  
+  .ag-row {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .ag-row:nth-child(odd) .ag-cell {
+    background-color: #f9f9f9;
+  }
+  .ag-row:nth-child(even) .ag-cell {
+    background-color: #ffffff;
+  }
+  
+  .ag-cell {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+ 
+  ::ng-deep .ag-grid-delete-button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  ::ng-deep .ag-grid-delete-button:hover {
+    background-color: #d32f2f;
+  }
+  
+  ::ng-deep .ag-grid-delete-button:active {
+    background-color: #b71c1c;
+  }
+  
