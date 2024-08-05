@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ColDef, ICellRendererParams, CellValueChangedEvent } from 'ag-grid-community';
+import { ColDef, ICellRendererParams, CellValueChangedEvent, ValueParserParams } from 'ag-grid-community';
 import { DataServiceService } from '../Services/data-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -11,25 +11,38 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./asset-grid.component.css']
 })
 export class AssetGridComponent implements OnInit {
-  // Reference to the confirmation dialog template for deletion
   @ViewChild('confirmDeleteDialog') confirmDeleteDialog!: TemplateRef<any>;
 
-  // Variables to hold the assets data and the currently selected asset
-  assets: any;
-  selectedAsset: any;
+  assets: any; // Variable to hold the list of assets
+  selectedAsset: any; // Variable to hold the currently selected asset
 
-  // Create an instance of DatePipe for formatting dates
-  datePipe = new DatePipe('en-US');
+  datePipe = new DatePipe('en-US'); // Instance of DatePipe for date formatting
 
-  // Column definitions for the AG-Grid table
+  // Column definitions for AG-Grid table
   columnDefs: ColDef[] = [
-    // Column for asset ID
-    { headerName: 'ID', field: 'id', sortable: true, filter: true, width: 100 },
-    // Column for asset brand
-    { headerName: 'Brand', field: 'brand', sortable: true, filter: true, width: 150, editable: true },
-    // Column for serial number
-    { headerName: 'Serial Number', field: 'serialNumber', sortable: true, filter: true, width: 200, editable: true },
-    // Column for asset status with a dropdown editor
+    { 
+      headerName: 'ID', 
+      field: 'id', 
+      sortable: true, 
+      filter: true, 
+      width: 100 
+    },
+    { 
+      headerName: 'Brand', 
+      field: 'brand', 
+      sortable: true, 
+      filter: true, 
+      width: 150, 
+      editable: true 
+    },
+    { 
+      headerName: 'Serial Number', 
+      field: 'serialNumber', 
+      sortable: true, 
+      filter: true, 
+      width: 200, 
+      editable: true 
+    },
     { 
       headerName: 'Status', 
       field: 'status', 
@@ -37,12 +50,11 @@ export class AssetGridComponent implements OnInit {
       filter: true, 
       width: 100,
       editable: true,
-      cellEditor: 'agSelectCellEditor',
+      cellEditor: 'agSelectCellEditor', // Dropdown editor for status
       cellEditorParams: {
-        values: ['New', 'In Use', 'Damaged', 'Dispose']
+        values: ['New', 'In Use', 'Damaged', 'Dispose'] // Status options
       }
     },
-    // Column for warranty expiration date with a date editor and formatted display
     { 
       headerName: 'Warranty Expiration', 
       field: 'warrantyExpirationDate', 
@@ -50,10 +62,13 @@ export class AssetGridComponent implements OnInit {
       filter: true, 
       width: 180,
       editable: true,
-      cellEditor: 'agDateCellEditor',
-      valueFormatter: (params: { value: Date }) => this.datePipe.transform(params.value, 'yyyy-MM-dd') || 'N/A'
+      cellEditor: 'agDateCellEditor', // Date editor for warranty expiration
+      valueFormatter: (params: { value: Date }) => this.datePipe.transform(params.value, 'yyyy-MM-dd') || 'N/A', // Format date for display
+      valueParser: (params: ValueParserParams<string, Date>) => {
+        const parsedDate = new Date(params.newValue); // Parse string to Date object
+        return isNaN(parsedDate.getTime()) ? null : parsedDate; // Check if the date is valid
+      }
     },
-    // Column for action buttons, specifically a delete button
     {
       headerName: 'Actions',
       width: 150,
@@ -61,13 +76,15 @@ export class AssetGridComponent implements OnInit {
         // Create a delete button element
         const button = document.createElement('button');
         button.innerText = 'Delete';
-        button.className = 'ag-grid-delete-button'; // Apply a CSS class for styling
+        button.className = 'ag-grid-delete-button'; // Apply CSS class for styling
+
         // Add a click event listener to the button
         button.addEventListener('click', () => {
-          this.selectedAsset = params.data;
-          this.openConfirmDeleteDialog(this.selectedAsset); // Open the confirmation dialog
+          this.selectedAsset = params.data; // Set the selected asset
+          this.openConfirmDeleteDialog(this.selectedAsset); // Open confirmation dialog
         });
-        return button; // Return the button element to be rendered in the cell
+
+        return button; // Return the button to be rendered in the cell
       }
     }
   ];
@@ -79,28 +96,32 @@ export class AssetGridComponent implements OnInit {
     filter: true
   };
 
-  constructor(private dataService: DataServiceService, public dialog: MatDialog, private toaster: ToastrService) {}
+  constructor(
+    private dataService: DataServiceService, // Data service for API interactions
+    public dialog: MatDialog, // Angular Material dialog service
+    private toaster: ToastrService // Toastr service for notifications
+  ) {}
 
   ngOnInit(): void {
-    this.fetchAllAssets(); // Fetch all assets when the component initializes
+    this.fetchAllAssets(); // Fetch assets when the component initializes
   }
 
-  // Fetch all assets from the server and store them in the 'assets' variable
+  // Fetch all assets from the server
   fetchAllAssets() {
     this.dataService.getAllAsset().subscribe(data => {
-      this.assets = data;
+      this.assets = data; // Store the fetched assets
     });
   }
 
-  // Open a confirmation dialog before deleting an asset
-  openConfirmDeleteDialog(assetId: any): void {
-    const dialogRef = this.dialog.open(this.confirmDeleteDialog); // Open the dialog
+  // Open confirmation dialog before deleting an asset
+  openConfirmDeleteDialog(asset: any): void {
+    const dialogRef = this.dialog.open(this.confirmDeleteDialog); // Open the confirmation dialog
     
     // Handle the result when the dialog is closed
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
         if (result === 'yes') {
-          this.onDelete(assetId); // Proceed with deletion if confirmed
+          this.onDelete(asset); // Proceed with deletion if confirmed
         } else {
           console.log('Thank you'); // Log message if cancellation is confirmed
         }
@@ -119,7 +140,7 @@ export class AssetGridComponent implements OnInit {
         console.log('Asset deleted successfully');
         setTimeout(() => {
           window.location.reload(); // Refresh the page after a delay of 3 seconds
-        }, 3000); // 3-second delay
+        }, 3000);
       },
       error => {
         console.error('Failed to delete asset', error); // Log error if deletion fails
@@ -136,6 +157,7 @@ export class AssetGridComponent implements OnInit {
       updatedAsset.warrantyExpirationDate = this.datePipe.transform(updatedAsset.warrantyExpirationDate, 'yyyy-MM-dd') || '';
     }
 
-    this.dataService.updateAsset(updatedAsset); // Update the asset in the server
+    // Ensure the date field is in the correct format before sending to the server
+    this.dataService.updateAsset(updatedAsset);
   }
 }

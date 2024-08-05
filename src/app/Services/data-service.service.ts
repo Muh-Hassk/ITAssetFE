@@ -48,6 +48,7 @@ export class DataServiceService {
       next: (res) => {
         this.toastr.success("Asset created successfully"); // Show success message
         console.log("Asset created successfully", res); // Log success
+        window.location.reload(); // to refresh page
       },
       error: (err) => {
         this.toastr.warning("Failed to add asset\nThere's Data duplication"); // Show warning message
