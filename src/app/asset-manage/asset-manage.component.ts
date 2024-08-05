@@ -8,43 +8,47 @@ import { DataServiceService } from '../Services/data-service.service';
   templateUrl: './asset-manage.component.html',
   styleUrls: ['./asset-manage.component.css']
 })
-export class AssetManageComponent implements OnInit {
+export class AssetManageComponent {
+  // Reference to the dialog content template
   @ViewChild('dialogContent') dialogContent!: TemplateRef<any>;
 
+  // Form group for creating a new asset
   newAssetForm: FormGroup;
+  // Options for the asset status dropdown
   statusOptions: string[] = ['New', 'In Use', 'Damaged', 'Dispose'];
 
   constructor(
-    private fb: FormBuilder,
-    private dataService: DataServiceService,
-    public dialog: MatDialog
+    private fb: FormBuilder, // Service for building reactive forms
+    private dataService: DataServiceService, // Service for API interactions
+    public dialog: MatDialog // Service for managing dialogs
   ) {
-    // Initialize the form group
+    // Initialize the form group with controls and validation
     this.newAssetForm = this.fb.group({
-      brand: ['', Validators.required],
-      serialNumber: ['', Validators.required],
-      status: ['', Validators.required],
-      warrantyExpirationDate: ['', Validators.required]
+      brand: ['', Validators.required], // Brand of the asset, required field
+      serialNumber: ['', Validators.required], // Serial number of the asset, required field
+      status: ['', Validators.required], // Status of the asset, required field
+      warrantyExpirationDate: ['', Validators.required] // Warranty expiration date, required field
     });
   }
 
-  ngOnInit(): void {}
 
+
+  // Open the dialog for creating a new asset
   openCreateAssetDialog(): void {
     const dialogRef = this.dialog.open(this.dialogContent, {
-      width: '600px'
+      width: '600px' // Set the width of the dialog
     });
-
     dialogRef.afterClosed().subscribe(result => {
-     
+      // No need to handle anything here it got handled by onSubmit{}
     });
   }
 
+  // Handle form submission for creating a new asset
   onSubmit(): void {
-    if (this.newAssetForm.valid) {
-      const newAsset = this.newAssetForm.value;
-      this.dataService.createAsset(newAsset)
-        this.dialog.closeAll();
+    if (this.newAssetForm.valid) { // Checks if the form has all data as valid
+      const newAsset = this.newAssetForm.value; // Get the asset form group values
+      this.dataService.createAsset(newAsset) // Call Api
+        this.dialog.closeAll(); // Close Dialog
     }
   }
 }
