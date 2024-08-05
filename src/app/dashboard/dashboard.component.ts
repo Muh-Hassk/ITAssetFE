@@ -72,6 +72,19 @@ export class DashboardComponent implements OnInit {
       title: {
         text: 'Number of Assets by Status' // Chart title
       },
+      tooltip: {
+        // display the count and percentage in the tooltip
+        pointFormat:'<b>{point.name}</b>: {point.y} ({point.percentage:.1f}%)'
+      },
+      plotOptions: {
+        pie: {
+          // enable
+          dataLabels: {
+            enabled: true,
+            format:'<b>{point.name}</b>: {point.y}' // display only the count
+          }
+        }
+      },
       series: [{
         type: 'pie', // Series type
         name: 'Statuses', // Series name
