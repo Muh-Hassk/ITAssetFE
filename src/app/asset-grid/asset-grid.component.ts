@@ -70,6 +70,16 @@ export class AssetGridComponent implements OnInit {
       }
     },
     {
+      
+        headerName: 'Created Date', 
+        field: 'createdDate', 
+        sortable: true, 
+        filter: true, 
+        width: 180,
+        editable: false, // To prevent it from being editable
+        valueFormatter: (params: { value: Date }) => this.datePipe.transform(params.value, 'yyyy-MM-dd') || 'N/A', // Format date for display
+    },
+    {
       headerName: 'Actions',
       width: 150,
       cellRenderer: (params: ICellRendererParams) => {
