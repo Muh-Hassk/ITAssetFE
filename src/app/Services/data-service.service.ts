@@ -51,7 +51,7 @@ export class DataServiceService {
         window.location.reload(); // to refresh page
       },
       error: (err) => {
-        this.toastr.warning("Failed to add asset\nThere's Data duplication"); // Show warning message
+        this.toastr.warning("Failed to add asset"); // Show warning message
         console.error("Failed to create asset:", err); // Log error
       }
     });
